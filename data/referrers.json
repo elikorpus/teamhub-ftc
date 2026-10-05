@@ -1,4 +1,10 @@
 {
-  "date": "2026-10-04",
-  "referrers": []
+  "date": "2026-10-05",
+  "referrers": [
+    {
+      "referrer": "github.com",
+      "count": 17,
+      "uniques": 1
+    }
+  ]
 }
