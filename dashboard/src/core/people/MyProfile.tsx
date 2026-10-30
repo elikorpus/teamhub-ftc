@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Download, LogOut, Trash2, Users } from 'lucide-react';
-import { Avatar, Button, Card, CardHeader, NameFields, PageHeader, Select, TYPE_LABEL, Textarea, VisibilityNote, downloadText, joinName, splitName, toast, useConfirm, validateRequired } from '@teamhub/ui';
+import { Form, Avatar, Button, Card, CardHeader, NameFields, PageHeader, Select, TYPE_LABEL, Textarea, VisibilityNote, downloadText, joinName, splitName, toast, useConfirm, validateRequired } from '@teamhub/ui';
 import { friendlyError, isMultiTeam, runtime, useMe, usePeople, useSupabase, Upload, uploadFile } from '@teamhub/sdk';
 import { TeamLogo } from '../auth/AuthLayout';
 import { LEVEL_NOTE, ProfileFieldInput, askedFields, fieldValue, saveProfileFields, useMyPrivate, useProfileFields } from './profileFields';
@@ -169,7 +169,7 @@ export default function MyProfile() {
             {me.memberships.filter((m) => m.status === 'active').length === 1 && <p className="text-[12px] text-faint">You can leave a team when you're on at least one other team.</p>}
             </div>
             {otherTeams.length > 0 && (
-              <form
+              <Form
                 className="space-y-2.5"
                 aria-label="Join another team"
                 onSubmit={async (e) => {
@@ -200,7 +200,7 @@ export default function MyProfile() {
                 <Button type="submit" size="sm" disabled={!joinTeam}>
                   Request to join
                 </Button>
-              </form>
+              </Form>
             )}
             </div>
           </Card>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2 } from 'lucide-react';
 import { normalizeEmailDomain } from '@teamhub/config-schema/util';
-import { Banner, Button, Card, IconButton, Input, PendingAddHint, RemovableTag, Spinner, submitOnBlur, toast, useConfirm } from '@teamhub/ui';
+import { Form, Banner, Button, Card, IconButton, Input, PendingAddHint, RemovableTag, Spinner, submitOnBlur, toast, useConfirm } from '@teamhub/ui';
 import { friendlyError, useSettingsRow, useSupabase } from '@teamhub/sdk';
 
 interface AllowedEmail {
@@ -57,7 +57,7 @@ export function WhoCanJoin() {
             ))}
           </div>
         )}
-        <form
+        <Form
           className="flex gap-2"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -71,7 +71,7 @@ export function WhoCanJoin() {
           <Button type="submit" icon={<Plus className="size-4" />}>
             Add domain
           </Button>
-        </form>
+        </Form>
         <PendingAddHint text={domain} />
         <p className="text-[12.5px] text-muted">
           Subdomains count too: allowing school.org also allows students.school.org. This only affects new sign-ups. People who already have an account keep it.
@@ -108,7 +108,7 @@ export function WhoCanJoin() {
             ))}
           </ul>
         ) : null}
-        <form
+        <Form
           className="flex flex-wrap gap-2"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -126,7 +126,7 @@ export function WhoCanJoin() {
           <Button type="submit" icon={<Plus className="size-4" />}>
             Allow
           </Button>
-        </form>
+        </Form>
         <PendingAddHint text={email} />
       </Card>
     </div>

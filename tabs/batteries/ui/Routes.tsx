@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { BatteryCharging, Gauge, MoreHorizontal, Plus, StickyNote, Zap } from 'lucide-react';
-import {
+import { BareButton,
   Button,
   Card,
   Dialog,
@@ -142,9 +142,9 @@ function BatteryCard({ b, st, logs, onEdit }: { b: Battery; st: ReturnType<typeo
       {canUndo && (
         <p className="mt-2 text-[12px] text-muted">
           Last: {latest!.kind === 'charged' ? 'charged' : latest!.kind === 'tested' ? `tested${latest!.voltage != null ? ` at ${latest!.voltage.toFixed(2)} V` : ''}` : latest!.kind === 'used' ? 'used' : 'note'} <RelativeTime date={latest!.at} />{' '}
-          <button type="button" className="font-medium text-accent hover:underline" onClick={undo}>
+          <BareButton type="button" className="font-medium text-accent hover:underline" onClick={undo}>
             Undo
-          </button>
+          </BareButton>
         </p>
       )}
       {logs.find((l) => l.kind === 'note') && <p className="mt-2 truncate text-[12px] text-muted"><StickyNote className="mr-1 inline size-3.5" aria-hidden />{logs.find((l) => l.kind === 'note')!.note}</p>}

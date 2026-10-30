@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Check, Pencil, Users, X } from 'lucide-react';
-import { IconButton, Input, cn } from '@teamhub/ui';
+import { Form, IconButton, Input, cn } from '@teamhub/ui';
 import { isModuleEnabled } from './runtime';
 import { useSession } from './session';
 
@@ -33,7 +33,7 @@ export function InlineEditText({ value, onSave, className, label }: { value: str
       </button>
     );
   return (
-    <form
+    <Form
       className="flex items-center gap-1.5"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -48,7 +48,7 @@ export function InlineEditText({ value, onSave, className, label }: { value: str
       <IconButton label="Cancel" size="sm" onClick={() => setEditing(false)}>
         <X className="size-4" />
       </IconButton>
-    </form>
+    </Form>
   );
 }
 

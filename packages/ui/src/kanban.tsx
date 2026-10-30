@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { Loader2 } from 'lucide-react';
 import { cn } from './cn';
 
 export interface KanbanColumn<T> {
@@ -23,18 +24,28 @@ export function Kanban<T>({
   columns: KanbanColumn<T>[];
   render: (item: T) => ReactNode;
   keyOf: (item: T) => string | number;
-  onMove?: (item: T, toColumn: string, index: number) => void;
+  /** Return a promise to show a spinner on the moved card until it is saved. */
+  onMove?: (item: T, toColumn: string, index: number) => void | Promise<unknown>;
   canDrag?: boolean | ((item: T) => boolean);
   emptyLabel?: string;
 }) {
   const [drag, setDrag] = useState<{ key: string | number; from: string } | null>(null);
   const [over, setOver] = useState<{ col: string; index: number } | null>(null);
+  const [saving, setSaving] = useState<ReadonlySet<string | number>>(new Set());
   const draggable = (it: T) => (typeof canDrag === 'function' ? canDrag(it) : canDrag) && !!onMove;
 
   const drop = (col: string) => {
     if (!drag || !over || !onMove) return;
     const src = columns.find((c) => c.id === drag.from)?.items.find((i) => keyOf(i) === drag.key);
-    if (src) onMove(src, col, over.index);
+    if (src) {
+      const result = onMove(src, col, over.index);
+      if (result && typeof (result as PromiseLike<unknown>).then === 'function') {
+        const k = drag.key;
+        const done = () => setSaving((s) => new Set([...s].filter((x) => x !== k)));
+        setSaving((s) => new Set(s).add(k));
+        (result as PromiseLike<unknown>).then(done, done);
+      }
+    }
     setDrag(null);
     setOver(null);
   };
@@ -69,6 +80,7 @@ export function Kanban<T>({
                 <li
                   key={k}
                   draggable={draggable(it)}
+                  aria-busy={saving.has(k) || undefined}
                   onDragStart={(e) => {
                     e.dataTransfer.effectAllowed = 'move';
                     setDrag({ key: k, from: col.id });
@@ -92,6 +104,9 @@ export function Kanban<T>({
                   )}
                 >
                   {render(it)}
+                  {saving.has(k) && (
+                    <Loader2 aria-hidden className="pointer-events-none absolute right-1.5 top-1.5 size-3.5 animate-spin text-muted" />
+                  )}
                 </li>
               );
             })}

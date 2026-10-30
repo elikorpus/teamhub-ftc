@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ChevronLeft, ChevronRight, Download, ExternalLink, Images, Link2, Pencil, Plus, Trash2, X } from 'lucide-react';
-import {
+import { BareButton, Form,
   Button,
   Dialog,
   EmptyState,
@@ -212,7 +212,7 @@ function AlbumPage() {
             ) : (
               <p className="rounded-lg border border-dashed border-border p-4 text-[13px] text-muted">This album is full ({maxPhotosPerAlbum} photos). Start a new album, or link a Google Photos/Drive album above.</p>
             )}
-            <form
+            <Form
               className="space-y-2 rounded-lg border border-border p-3"
               onSubmit={(e) => {
                 e.preventDefault();
@@ -226,7 +226,7 @@ function AlbumPage() {
               <Button size="sm" type="submit" disabled={!link.trim()}>
                 Add link
               </Button>
-            </form>
+            </Form>
           </div>
         )}
         {items.isLoading ? (
@@ -244,9 +244,9 @@ function AlbumPage() {
                       {thumb ? <img src={thumb} alt="" loading="lazy" referrerPolicy="no-referrer" className="size-full object-cover" /> : <span className="grid size-full place-items-center p-2 text-center text-[12px] text-muted"><ExternalLink className="mb-1 size-5" />{new URL(i.url!).hostname}</span>}
                     </a>
                     {(i.uploaded_by === me.id || canDeleteAny) && (
-                      <button aria-label="Remove link" onClick={() => remove(i)} className="absolute right-1 top-1 hidden rounded bg-black/60 p-1 text-white group-hover:block">
+                      <BareButton aria-label="Remove link" onClick={() => remove(i)} className="absolute right-1 top-1 hidden rounded bg-black/60 p-1 text-white group-hover:block">
                         <X className="size-3.5" />
-                      </button>
+                      </BareButton>
                     )}
                   </li>
                 );
@@ -327,7 +327,7 @@ function Lightbox({ item, url, canDelete, canEdit, onPrev, onNext, onDelete, onC
         )}
       </div>
       {canEdit && (
-        <form
+        <Form
           className={cn('mt-3 flex gap-2')}
           onSubmit={async (e) => {
             e.preventDefault();
@@ -339,7 +339,7 @@ function Lightbox({ item, url, canDelete, canEdit, onPrev, onNext, onDelete, onC
         >
           <Input maxLength={300} placeholder="Add a caption" value={caption} onChange={(e) => setCaption(e.target.value)} />
           <Button type="submit">Save</Button>
-        </form>
+        </Form>
       )}
     </Dialog>
   );

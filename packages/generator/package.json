@@ -8,6 +8,6 @@
   "dependencies": {
     "@teamhub/config-schema": "1.0.0",
     "@teamhub/sdk": "1.0.0",
-    "zod": "4.6.5"
+    "zod": "4.6.7"
   }
 }

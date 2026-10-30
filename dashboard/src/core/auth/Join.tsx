@@ -3,7 +3,7 @@ import { Link, Navigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { emailDomainAllowed } from '@teamhub/config-schema/util';
 import { Check, MailCheck } from 'lucide-react';
-import { Banner, Button, Field, Input, NameFields, Segmented, Textarea, VisibilityNote, cn, joinName } from '@teamhub/ui';
+import { Form, Banner, Button, Field, Input, NameFields, Segmented, Textarea, VisibilityNote, cn, joinName } from '@teamhub/ui';
 import { friendlyError, isMultiTeam, runtime, useSession, useSupabase } from '@teamhub/sdk';
 import { AuthLayout, TeamLogo } from './AuthLayout';
 
@@ -65,7 +65,7 @@ export function Join() {
 
   return (
     <AuthLayout title="Join the team" subtitle="Create your account. A captain or mentor will approve it." wide>
-      <form
+      <Form
         className="space-y-4"
         onSubmit={async (e) => {
           e.preventDefault();
@@ -160,7 +160,7 @@ export function Join() {
         <Button type="submit" variant="primary" size="lg" className="w-full" loading={busy}>
           Request to join
         </Button>
-      </form>
+      </Form>
       <div className="mt-5 border-t border-border pt-4 text-center text-[13px]">
         Already have an account?{' '}
         <Link to="/login" className="font-medium text-accent hover:underline">

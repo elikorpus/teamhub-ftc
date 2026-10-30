@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { MessageSquare, Send, Trash2 } from 'lucide-react';
-import { IconButton, RelativeTime, Spinner, Textarea, VisibilityNote, toast, useConfirm } from '@teamhub/ui';
+import { BareButton, IconButton, RelativeTime, Spinner, Textarea, VisibilityNote, toast, useConfirm } from '@teamhub/ui';
 import { useMe } from './session';
 import { friendlyError, useSupabase } from './hooks';
 import { Person } from './components';
@@ -58,7 +58,7 @@ export function CommentThread({ refStr, visibility }: { refStr: string; visibili
                   <Person id={c.author} size="sm" />
                   <RelativeTime date={c.created_at} className="text-faint" />
                   {(c.author === me.id || me.isAdmin) && (
-                    <button
+                    <BareButton
                       className="ml-auto text-muted hover:text-fg pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus:opacity-100"
                       aria-label="Delete comment"
                       onClick={async () => {
@@ -69,7 +69,7 @@ export function CommentThread({ refStr, visibility }: { refStr: string; visibili
                       }}
                     >
                       <Trash2 className="size-3.5" />
-                    </button>
+                    </BareButton>
                   )}
                 </div>
                 <p className="mt-1 whitespace-pre-wrap break-words text-[13.5px]">{c.body}</p>

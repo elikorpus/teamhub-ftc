@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bell, CheckCheck } from 'lucide-react';
-import { Button, EmptyState, IconButton, RelativeTime, Sheet, cn, sameDay } from '@teamhub/ui';
+import { BareButton, Button, EmptyState, IconButton, RelativeTime, Sheet, Spinner, cn, sameDay } from '@teamhub/ui';
 import { getModule, parseRef, PersonName, useMe, useRealtime, useSupabase, EntityLink } from '@teamhub/sdk';
 
 interface Notif {
@@ -72,9 +72,9 @@ export function NotificationsButton() {
       <li key={n.id} className={cn('flex gap-3 px-4 py-3', !n.read_at && 'bg-accent-soft/50')}>
         <span className={cn('mt-1.5 size-2 shrink-0 rounded-full', n.read_at ? 'bg-transparent' : 'bg-accent')} />
         <div className="min-w-0 flex-1 text-[13.5px]">
-          <button type="button" onClick={open} className="text-left hover:underline">
+          <BareButton type="button" onClick={open} className="text-left hover:underline">
             <strong className="font-semibold">{n.actor ? <PersonName id={n.actor} /> : 'TeamHub'}</strong> {notifText(n)}
-          </button>
+          </BareButton>
           {parseRef(n.ref)?.module !== 'core' && (
             <div className="mt-1" onClickCapture={() => markRead([n.id]).then(() => setOpen(false))}>
               <EntityLink refStr={n.ref} />
@@ -106,7 +106,9 @@ export function NotificationsButton() {
           ) : undefined
         }
       >
-        {!q.data?.length ? (
+        {q.isLoading ? (
+          <Spinner className="m-8" />
+        ) : !q.data?.length ? (
           <EmptyState icon={<Bell />} title="You're all caught up" body="Assignments, approvals and status changes show up here." />
         ) : (
           <div>

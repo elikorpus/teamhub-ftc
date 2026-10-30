@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Award, Link2, Pause, Pencil, Play, Plus, Shuffle, Trash2, X } from 'lucide-react';
-import { Badge, Button, Card, CardHeader, Dialog, EmptyState, Field, IconButton, Input, Markdown, ProgressRing, Segmented, Spinner, Textarea, toast, useConfirm, validateRequired } from '@teamhub/ui';
+import { Form, Badge, Button, Card, CardHeader, Dialog, EmptyState, Field, IconButton, Input, Markdown, ProgressRing, Segmented, Spinner, Textarea, toast, useConfirm, validateRequired } from '@teamhub/ui';
 import { EntityLink, friendlyError, ModuleHeader, ModulePurpose, Person, PersonPicker, Slot, useCan, useRows, useSeason, useSupabase, useTeamScope } from '@teamhub/sdk';
 
 interface Question {
@@ -276,7 +276,7 @@ function Evidence() {
                     ))}
                     {canManage &&
                       (adding === c.id ? (
-                        <form
+                        <Form
                           className="flex gap-1"
                           onSubmit={(ev) => {
                             ev.preventDefault();
@@ -291,7 +291,7 @@ function Evidence() {
                           <Button size="sm" type="submit">
                             Add
                           </Button>
-                        </form>
+                        </Form>
                       ) : (
                         <Button size="sm" variant="ghost" icon={<Link2 className="size-3.5" />} onClick={() => setAdding(c.id)}>
                           Add evidence
@@ -304,7 +304,7 @@ function Evidence() {
         </Card>
       ))}
       {canManage && list.length > 0 && (
-        <form
+        <Form
           className="flex flex-wrap gap-2"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -326,7 +326,7 @@ function Evidence() {
           <Button type="submit" icon={<Plus className="size-4" />}>
             Add criterion
           </Button>
-        </form>
+        </Form>
       )}
       <Badge>Season {season}</Badge>
     </div>

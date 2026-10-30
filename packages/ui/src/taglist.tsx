@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Plus, X } from 'lucide-react';
 import { cn } from './cn';
-import { Button, Input } from './primitives';
+import { BareButton, Button, Input } from './primitives';
 
 /**
  * Edit a short list of words (sizes, platforms, answer choices…): each item is a tag with a remove button, plus a
@@ -80,18 +80,17 @@ export function TagListInput({
 }
 
 /** A tag with a remove button (subteams, email domains, sizes…). */
-export function RemovableTag({ label, onRemove, removeLabel }: { label: ReactNode; onRemove: () => void; removeLabel?: string }) {
+export function RemovableTag({ label, onRemove, removeLabel }: { label: ReactNode; onRemove: () => void | Promise<unknown>; removeLabel?: string }) {
   return (
     <span className="inline-flex h-8 items-center gap-1 rounded-full border border-border bg-bg-subtle pl-3 pr-1 text-[13px]">
       {label}
-      <button
-        type="button"
+      <BareButton
         aria-label={removeLabel ?? `Remove ${typeof label === 'string' ? label : 'item'}`}
         onClick={onRemove}
         className="grid size-6 place-items-center rounded-full text-muted transition-colors hover:bg-bg hover:text-fg"
       >
         <X className="size-4" />
-      </button>
+      </BareButton>
     </span>
   );
 }

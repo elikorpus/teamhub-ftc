@@ -40,7 +40,8 @@ export function SessionPage() {
   const editable = !!s && ((canTake && s.date >= toDateInput(new Date(Date.now() - 86_400_000))) || canWith(me, 'attendance.edit', s.team_id));
   useRealtime('att_presence', `session_id=eq.${id}`, () => qc.invalidateQueries({ queryKey: ['attendance', 'session-presence', id] }), canTake);
 
-  if (session.isLoading) return <Spinner className="m-8" />;
+  // Wait for who is here too, or everyone shows as absent for a moment.
+  if (session.isLoading || presence.isLoading) return <Spinner className="m-8" />;
   if (!s) return <EmptyState title="Session not found" action={<Button onClick={() => nav('/attendance')}>Back</Button>} />;
 
   const refresh = () => qc.invalidateQueries({ queryKey: ['attendance'] });
@@ -67,7 +68,8 @@ export function SessionPage() {
   const toggle = async (userId: string, on: boolean) => {
     const res = on ? await sb.from('att_presence').upsert({ session_id: s.id, user_id: userId, check_in: new Date().toISOString() }) : await sb.from('att_presence').delete().match({ session_id: s.id, user_id: userId });
     if (res.error) toast.error(friendlyError(res.error));
-    qc.invalidateQueries({ queryKey: ['attendance', 'session-presence', id] });
+    // Wait for the refetch so the box keeps its spinner until the new state is really there.
+    await qc.invalidateQueries({ queryKey: ['attendance', 'session-presence', id] });
   };
 
   return (
@@ -101,7 +103,7 @@ export function SessionPage() {
               if (!missing.length) return;
               const { error } = await sb.from('att_presence').upsert(missing.map((p) => ({ session_id: s.id, user_id: p.id, check_in: new Date().toISOString() })));
               if (error) toast.error(friendlyError(error));
-              refresh();
+              await refresh();
             }}
           >
             Mark all present
@@ -154,7 +156,7 @@ export function SessionPage() {
                   onClick={async () => {
                     const { error } = await sb.from('att_presence').update({ check_out: new Date().toISOString() }).match({ session_id: s.id, user_id: p.id });
                     if (error) toast.error(friendlyError(error));
-                    refresh();
+                    await refresh();
                   }}
                 >
                   Out

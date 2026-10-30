@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { NavLink, Route, Routes } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Activity, BookOpen, Bot, Boxes, CalendarRange, Database, ExternalLink, HardDrive, IdCard, MailCheck, Shield, Trash2 } from 'lucide-react';
-import {
+import { Form,
   Badge,
   Banner,
   Button,
@@ -459,7 +459,7 @@ function Season() {
         The season label tags new items (scouting, notebook, outreach…) and sets which FTCScout season is shown. Changing it here only changes the label. For a full rollover (archive
         last season, reset checklists, free storage), use <strong>New Season</strong> in the setup wizard.
       </p>
-      <form
+      <Form
         className="flex gap-2"
         onSubmit={async (e) => {
           e.preventDefault();
@@ -475,7 +475,7 @@ function Season() {
         <Button type="submit" variant="primary">
           Save
         </Button>
-      </form>
+      </Form>
     </Card>
   );
 }

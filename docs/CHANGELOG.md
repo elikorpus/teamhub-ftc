@@ -12,6 +12,28 @@ Releases with a **Security** section fix a vulnerability. Update as soon as you 
 How to update your dashboard: [docs/updating.md](updating.md).
 
 ## [Unreleased]
+### Changed
+
+- **Everything you tap shows that it's working.** Buttons, checkboxes, switches, drop-downs and forms that save
+  something show a spinner until the save finishes, and can't be tapped twice by accident. In the setup wizard too.
+- **Attendance**: tapping someone fills their box right away, with a spinner inside until it's saved.
+- Drag-and-drop boards (Tasks, Manufacturing, Social) show a spinner on the card you moved until it's saved.
+- Pages wait for their data before showing "nothing here": Notifications no longer says "You're all caught up"
+  while loading, a practice's roster no longer shows everyone absent for a moment, and the scouting event search,
+  the repairs parts picker and the wizard's Supabase project list show that they're loading.
+
+### Fixed
+
+- **Attendance** on iPhones: the check mark sits inside its box again. Safari drew the box smaller than its space,
+  so the check hung off the corner. Every checkbox and switch is drawn the same way on all browsers now.
+- **Scouting** pick list: adding a team before the saved list had loaded could replace the list with just that team.
+  The list now loads before you can change it.
+
+### Security
+
+- Updated Vite (8.3.5) and Zod (4.6.7) for published advisories. Vite's affect the setup wizard's local server; Zod's
+  could use up memory on very large input.
+- Signing in with a `?next=` address only goes to a page on your own dashboard.
 
 ## [1.1.6] - 2026-10-14
 ### Added

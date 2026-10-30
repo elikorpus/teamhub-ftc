@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle2, Database, ExternalLink, KeyRound } from 'lucide-react';
 import type { TeamhubConfig } from '@teamhub/config-schema';
-import { Banner, Button, Checkbox, Field, Input, NameFields, joinName, Segmented, Select, Spinner, toast, validateRequired } from '@teamhub/ui';
+import { BareButton, Banner, Button, Checkbox, Field, Input, NameFields, joinName, Segmented, Select, Spinner, toast, validateRequired } from '@teamhub/ui';
 import { TOOL_SLOT_LABELS } from '@teamhub/sdk';
 import { api } from '../api';
 import { Section, StepShell, TokenSteps, Why } from '../components';
@@ -179,6 +179,7 @@ export function ConnectSupabase({ onNext, onBack }: StepProps) {
   const [pat, setPat] = useState('');
   const [remember, setRemember] = useState(true);
   const [projects, setProjects] = useState<ProjectRow[] | null>(null);
+  const [projectsError, setProjectsError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [plan, setPlan] = useState<{ lines: string[]; sql: string; fresh: boolean } | null>(null);
   const [showSql, setShowSql] = useState(false);
@@ -186,7 +187,7 @@ export function ConnectSupabase({ onNext, onBack }: StepProps) {
   const [dataApi, setDataApi] = useState<{ schemas: string[]; ok: boolean } | null>(null);
 
   useEffect(() => {
-    if (server.supabase.connected && !projects) api<{ projects: ProjectRow[] }>('/supabase/projects').then((r) => setProjects(r.projects)).catch(() => {});
+    if (server.supabase.connected && !projects) api<{ projects: ProjectRow[] }>('/supabase/projects').then((r) => setProjects(r.projects)).catch((e) => setProjectsError((e as Error).message));
   }, [server.supabase.connected, projects]);
   useEffect(() => {
     if (c.supabase.projectRef) api('/plan', c).then(setPlan).catch((e) => toast.error(e.message));
@@ -284,7 +285,7 @@ export function ConnectSupabase({ onNext, onBack }: StepProps) {
         {server.supabase.connected ? (
           <p className="flex items-center gap-2 text-[13.5px]">
             <CheckCircle2 className="size-4 text-success" /> Connected{server.supabase.remembered ? ' (remembered on this computer)' : ''}.{' '}
-            <button
+            <BareButton
               className="text-accent hover:underline"
               onClick={async () => {
                 await api('/supabase/forget', {});
@@ -293,7 +294,7 @@ export function ConnectSupabase({ onNext, onBack }: StepProps) {
               }}
             >
               Disconnect
-            </button>
+            </BareButton>
           </p>
         ) : (
           <>
@@ -307,6 +308,7 @@ export function ConnectSupabase({ onNext, onBack }: StepProps) {
             <Checkbox checked={remember} onChange={setRemember} label="Remember on this computer (saved in ~/.teamhub, never in your repository)" />
           </>
         )}
+        {server.supabase.connected && !projects && (projectsError ? <Banner tone="danger" title="Couldn't load your Supabase projects">{projectsError}</Banner> : <Spinner label="Loading your projects" />)}
         {projects && (
           <Field label="Your project">
             {(id) => (

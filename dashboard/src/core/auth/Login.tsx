@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router';
-import { Banner, Button, Field, Input } from '@teamhub/ui';
+import { BareButton, Form, Banner, Button, Field, Input } from '@teamhub/ui';
 import { friendlyError, runtime, useSession, useSupabase } from '@teamhub/sdk';
 import { AuthLayout } from './AuthLayout';
 
@@ -16,13 +16,15 @@ export function Login() {
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [resent, setResent] = useState(false);
   const emailEnabled = runtime().config.features.email;
+  // Only a path on this site: "//other.site" and "/\other.site" would leave it.
   const next = params.get('next');
+  const safeNext = next && /^\/(?![/\\])/.test(next) ? next : '/';
 
-  if (!loading && session) return <Navigate to={next && next.startsWith('/') ? next : '/'} replace />;
+  if (!loading && session) return <Navigate to={safeNext} replace />;
 
   return (
     <AuthLayout title="Sign in" subtitle="Welcome back">
-      <form
+      <Form
         className="space-y-4"
         onSubmit={async (e) => {
           e.preventDefault();
@@ -70,7 +72,7 @@ export function Login() {
           resetSent ? (
             <p className="text-center text-[12.5px] text-muted">Check your email for a reset link.</p>
           ) : (
-            <button
+            <BareButton
               type="button"
               className="block w-full text-center text-[12.5px] text-accent hover:underline"
               onClick={async () => {
@@ -81,12 +83,12 @@ export function Login() {
               }}
             >
               Forgot your password?
-            </button>
+            </BareButton>
           )
         ) : (
           <p className="text-center text-[12.5px] text-muted">Forgot your password? Ask a mentor or admin for a reset link.</p>
         )}
-      </form>
+      </Form>
       <div className="mt-5 border-t border-border pt-4 text-center text-[13px]">
         New to the team?{' '}
         <Link to="/join" className="font-medium text-accent hover:underline">

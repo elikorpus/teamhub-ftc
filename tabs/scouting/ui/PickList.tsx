@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowDown, ArrowUp, GripVertical, Sparkles, X } from 'lucide-react';
-import { Button, Card, CardHeader, IconButton, Input, cn, toast } from '@teamhub/ui';
+import { Button, Card, CardHeader, IconButton, Input, Spinner, cn, toast } from '@teamhub/ui';
 import { canWith, friendlyError, runtime, useMe, useSupabase, useTeamScope, useViewableTeams } from '@teamhub/sdk';
 import type { EventContext } from './event';
 import type { useScoutingStats } from './stats';
@@ -47,6 +47,8 @@ export function PickList({ ctx, stats, onTeam }: { ctx: EventContext; stats: Ret
     .filter((x) => x.number !== ours.number && !list.some((p) => p.team === x.number))
     .map((x) => ({ n: x.number, s: stats.composite.get(x.number) ?? null, opr: x.stats?.opr?.totalPointsNp ?? null }))
     .sort((a, b) => (b.s ?? -99) - (a.s ?? -99) || (b.opr ?? -1) - (a.opr ?? -1));
+  // Wait for the saved ranking: adding a team before it loads would save a one-team list over it.
+  if (q.isLoading) return <Spinner className="m-8" />;
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
       <Card>

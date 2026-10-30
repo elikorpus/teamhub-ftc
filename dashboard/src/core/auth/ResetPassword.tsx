@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Banner, Button, Field, Input } from '@teamhub/ui';
+import { Form, Banner, Button, Field, Input } from '@teamhub/ui';
 import { friendlyError, runtime, useSession, useSupabase } from '@teamhub/sdk';
 import { AuthLayout } from './AuthLayout';
 
@@ -33,7 +33,7 @@ export function ResetPassword() {
           This page works from a password reset link. {newLink} if yours expired.
         </Banner>
       ) : (
-        <form
+        <Form
           className="space-y-4"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -54,7 +54,7 @@ export function ResetPassword() {
           <Button type="submit" variant="primary" size="lg" className="w-full" loading={busy} disabled={!session}>
             Save password
           </Button>
-        </form>
+        </Form>
       )}
     </AuthLayout>
   );

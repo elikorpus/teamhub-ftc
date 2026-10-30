@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ClipboardPen, Plus, Trash2, UserMinus, UserPlus, X } from 'lucide-react';
-import {
+import { BareButton,
   Avatar,
   Button,
   Dialog,
@@ -201,7 +201,7 @@ function SheetDialog({ sheet: s, slots, claims, onClose }: { sheet: Sheet; slots
                           <Avatar name={p?.name ?? '?'} src={p?.avatarUrl} size={20} />
                           {p?.name ?? 'Former member'}
                           {manage && c.user_id !== me.id && (
-                            <button
+                            <BareButton
                               aria-label={`Remove ${p?.name ?? 'person'}`}
                               className="text-muted hover:text-fg"
                               onClick={async () => {
@@ -210,7 +210,7 @@ function SheetDialog({ sheet: s, slots, claims, onClose }: { sheet: Sheet; slots
                               }}
                             >
                               <X className="size-3" />
-                            </button>
+                            </BareButton>
                           )}
                         </span>
                       );

@@ -50,8 +50,8 @@ function PartsUsed({ issue }: { issue: { id: string; team_id: string | null } })
         }
       >
         <div className="space-y-3">
-          <Select value={item} onChange={(e) => setItem(e.target.value)} aria-label="Part">
-            <option value="">Choose a part…</option>
+          <Select value={item} onChange={(e) => setItem(e.target.value)} disabled={parts.isLoading} aria-label="Part">
+            <option value="">{parts.isLoading ? 'Loading parts…' : 'Choose a part…'}</option>
             {(parts.data ?? []).map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name} ({p.qty} in stock)

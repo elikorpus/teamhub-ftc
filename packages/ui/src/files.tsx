@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { UploadCloud, Link2, File as FileIcon, Trash2, Download, Image as ImageIcon, Box } from 'lucide-react';
 import { cn } from './cn';
-import { Button, IconButton, Input } from './primitives';
+import { Form, Button, IconButton, Input } from './primitives';
 import { formatBytes } from './charts';
 
 /** File kinds and their rules (spec §11.2). */
@@ -166,7 +166,7 @@ export function FileDrop({
           {(working || busy) && <p className="text-[12px] text-muted">{working ? 'Compressing…' : 'Uploading…'}</p>}
         </div>
       ) : (
-        <form
+        <Form
           className="flex gap-2"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -180,7 +180,7 @@ export function FileDrop({
           <Button type="submit" variant="primary">
             Add link
           </Button>
-        </form>
+        </Form>
       )}
       {error && <p className="text-[12.5px] text-danger">{error}</p>}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-muted">

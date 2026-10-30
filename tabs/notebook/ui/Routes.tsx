@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Download, ExternalLink, NotebookPen, Pencil, Plus, Printer, Trash2, Trophy } from 'lucide-react';
-import {
+import { Form,
   Badge,
   Button,
   DetailPane,
@@ -244,7 +244,7 @@ function ManageSubsystemsButton({ open, setOpen }: { open: boolean; setOpen: (v:
             </li>
           ))}
         </ul>
-        <form
+        <Form
           className="flex gap-2"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -257,7 +257,7 @@ function ManageSubsystemsButton({ open, setOpen }: { open: boolean; setOpen: (v:
         >
           <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="New subsystem" maxLength={60} />
           <Button type="submit">Add</Button>
-        </form>
+        </Form>
       </Dialog>
     </>
   );

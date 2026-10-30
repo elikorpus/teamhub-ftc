@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CalendarDays, History, Plus, Search, Trash2, Trophy } from 'lucide-react';
 import { seasonYear } from '@teamhub/config-schema/util';
-import { Badge, Button, Dialog, Field, IconButton, Input, RelativeTime, Textarea, formatDate, toast, useConfirm, validateRequired } from '@teamhub/ui';
+import { Form, Badge, Button, Dialog, Field, IconButton, Input, RelativeTime, Spinner, Textarea, formatDate, toast, useConfirm, validateRequired } from '@teamhub/ui';
 import { friendlyError, getTeamEvents, runtime, searchEvents, useCan, useMe, useSeason, useSupabase } from '@teamhub/sdk';
 import { useManualEvents } from './event';
 
@@ -128,6 +128,11 @@ export function EventPicker({ value, name, onChange }: { value: string; name?: s
                     </button>
                   </li>
                 ))}
+                {results.isFetching && (
+                  <li>
+                    <Spinner className="px-2" label="Searching FTCScout" />
+                  </li>
+                )}
                 {q.length >= 2 && results.data?.length === 0 && <li className="px-2 text-[12.5px] text-faint">No matching events on FTCScout.</li>}
               </ul>
             </section>
@@ -138,7 +143,7 @@ export function EventPicker({ value, name, onChange }: { value: string; name?: s
             )}
           </div>
         ) : (
-          <form
+          <Form
             className="space-y-3"
             onSubmit={async (e) => {
               e.preventDefault();
@@ -167,7 +172,7 @@ export function EventPicker({ value, name, onChange }: { value: string; name?: s
               </Button>
               <Button onClick={() => setManualForm(false)}>Back</Button>
             </div>
-          </form>
+          </Form>
         )}
       </Dialog>
     </>

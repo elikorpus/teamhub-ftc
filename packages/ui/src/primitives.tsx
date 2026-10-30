@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react';
+import { createContext, forwardRef, isValidElement, useContext, useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type ChangeEvent, type FormEvent, type FormHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react';
 import { Check, Command, Info, AlertTriangle, XCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { cn } from './cn';
 
@@ -24,6 +24,52 @@ const sizes: Record<Size, string> = {
 // with both present the stylesheet order decided, which squeezed icons to 8px.
 const padding: Record<Size, string> = { sm: 'px-2.5', md: 'px-3.5', lg: 'px-5' };
 
+/**
+ * Tracks a handler's promise so a control can show it's working. `run(value, result)` stores `value` (what the control
+ * should show meanwhile) until `result` settles; plain (non-promise) results are ignored. Errors still reach the caller.
+ */
+export function usePending<T = true>(): [T | undefined, (value: T, result: unknown) => void] {
+  const [pending, setPending] = useState<T | undefined>(undefined);
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+  const run = (value: T, result: unknown) => {
+    if (!result || typeof (result as PromiseLike<unknown>).then !== 'function') return;
+    setPending(() => value);
+    const done = () => alive.current && setPending(undefined);
+    (result as PromiseLike<unknown>).then(done, (e: unknown) => {
+      done();
+      throw e;
+    });
+  };
+  return [pending, run];
+}
+
+const FormBusy = createContext(false);
+
+/** A `<form>` whose async onSubmit shows the spinner on its submit button until it finishes. */
+export const Form = forwardRef<HTMLFormElement, Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> & { onSubmit?: (e: FormEvent<HTMLFormElement>) => void | Promise<unknown> }>(
+  function Form({ onSubmit, ...rest }, ref) {
+    const [busy, run] = usePending();
+    return (
+      <FormBusy.Provider value={!!busy}>
+        <form
+          ref={ref}
+          onSubmit={(e) => {
+            if (busy) return e.preventDefault();
+            run(true, onSubmit?.(e));
+          }}
+          {...rest}
+        />
+      </FormBusy.Provider>
+    );
+  },
+);
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
@@ -32,15 +78,22 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'secondary', size = 'md', loading, icon, className, children, disabled, type = 'button', ...rest },
+  { variant = 'secondary', size = 'md', loading: loadingProp, icon, className, children, disabled, type = 'button', onClick, ...rest },
   ref,
 ) {
+  // An async onClick shows the spinner (and blocks double taps) until it finishes, so every save button has a
+  // loading state without each screen tracking one.
+  const [busy, run] = usePending();
+  const formBusy = useContext(FormBusy) && type === 'submit';
+  const loading = loadingProp || !!busy || formBusy;
   return (
     <button
       ref={ref}
       type={type}
       data-variant={variant}
       disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      onClick={onClick && ((e) => run(true, onClick(e)))}
       className={cn(
         'inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap transition-colors duration-150 disabled:opacity-50 select-none [&_svg]:shrink-0',
         variants[variant],
@@ -52,6 +105,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     >
       {loading ? <Loader2 className="size-4 animate-spin" aria-hidden /> : icon}
       {children}
+    </button>
+  );
+});
+
+/**
+ * An unstyled `<button>` (text links, small icons on cards) whose async onClick shows a spinner until it finishes:
+ * an icon is swapped for the spinner, text gets one in front of it.
+ */
+export const BareButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(function BareButton(
+  { className, children, disabled, type = 'button', onClick, ...rest },
+  ref,
+) {
+  const [busy, run] = usePending();
+  const spinner = <Loader2 className="inline size-3.5 animate-spin align-[-2px]" aria-hidden />;
+  return (
+    <button
+      ref={ref}
+      type={type}
+      disabled={disabled || !!busy}
+      aria-busy={busy || undefined}
+      onClick={onClick && ((e) => run(true, onClick(e)))}
+      className={cn(busy && 'cursor-wait', className)}
+      {...rest}
+    >
+      {busy && isValidElement(children) ? spinner : busy ? <>{spinner} {children}</> : children}
     </button>
   );
 });
@@ -91,18 +169,31 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
   return <textarea ref={ref} rows={rows} className={cn(field, w(className), 'py-2 leading-relaxed', className)} {...rest} />;
 });
 
-export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(function Select(
-  { className, children, ...rest },
-  ref,
-) {
+export const Select = forwardRef<
+  HTMLSelectElement,
+  Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> & { onChange?: (e: ChangeEvent<HTMLSelectElement>) => unknown }
+>(function Select({ className, children, onChange, disabled, value, ...rest }, ref) {
+  // An async onChange shows the new choice with a spinner in place of the arrow until it's saved.
+  const [saving, run] = usePending<string>();
   return (
-    <select ref={ref} className={cn(field, w(className), 'h-9 pr-8 appearance-none bg-no-repeat', className)} style={{ backgroundImage: CHEVRON, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.6rem center', backgroundSize: '14px' }} {...rest}>
+    <select
+      ref={ref}
+      className={cn(field, w(className), 'h-9 pr-8 appearance-none bg-no-repeat', className)}
+      style={{ backgroundImage: saving !== undefined ? SPINNER : CHEVRON, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.6rem center', backgroundSize: '14px' }}
+      disabled={disabled || saving !== undefined}
+      aria-busy={saving !== undefined || undefined}
+      value={saving ?? value}
+      onChange={onChange && ((e) => run(e.target.value, onChange(e)))}
+      {...rest}
+    >
       {children}
     </select>
   );
 });
 // Lucide 'chevron-down' (24×24) as a background so the native <select> keeps its accessibility and mobile pickers.
 const CHEVRON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e98' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`;
+// Lucide 'loader-circle', spun by SVG animation (a background image can't use CSS animations).
+const SPINNER = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e98' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-6.219-8.56'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='0.8s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E")`;
 
 export function Label({ children, htmlFor, className }: { children: ReactNode; htmlFor?: string; className?: string }) {
   return (
@@ -220,7 +311,8 @@ export function Checkbox({
   className,
 }: {
   checked: boolean | 'indeterminate';
-  onChange: (v: boolean) => void;
+  /** Return a promise to show a spinner (and block more taps) until it settles. */
+  onChange: (v: boolean) => void | Promise<unknown>;
   label?: ReactNode;
   disabled?: boolean;
   id?: string;
@@ -229,25 +321,41 @@ export function Checkbox({
 }) {
   const auto = useId();
   const cid = id ?? auto;
-  const on = checked === true;
+  const [saving, run] = usePending<boolean>();
+  // While saving, the box already shows the new value.
+  const on = saving !== undefined ? saving : checked === true;
   return (
     <span className={cn('inline-flex items-center gap-2', className)}>
+      {/* The input is an invisible tap target over a drawn box. Safari doesn't stretch an absolutely positioned
+          checkbox to fill its box, which left the check mark hanging off a smaller circle on iPhones. */}
       <span className={cn('relative grid shrink-0 place-items-center', size === 'lg' ? 'size-7' : 'size-[18px]')}>
         <input
           id={cid}
           type="checkbox"
           checked={on}
           ref={(el) => {
-            if (el) el.indeterminate = checked === 'indeterminate';
+            if (el) el.indeterminate = saving === undefined && checked === 'indeterminate';
           }}
-          disabled={disabled}
-          onChange={(e) => onChange(e.target.checked)}
-          className={cn(
-            'peer absolute inset-0 m-0 cursor-pointer appearance-none border border-border-strong bg-surface transition-colors checked:border-accent checked:bg-accent disabled:cursor-not-allowed disabled:opacity-50',
-            size === 'lg' ? 'rounded-md' : 'rounded-[5px]',
-          )}
+          disabled={disabled || saving !== undefined}
+          aria-busy={saving !== undefined || undefined}
+          onChange={(e) => run(e.target.checked, onChange(e.target.checked))}
+          className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
         />
-        <Check aria-hidden className={cn('pointer-events-none relative text-accent-fg opacity-0 peer-checked:opacity-100', size === 'lg' ? 'size-5' : 'size-3.5')} strokeWidth={3} />
+        <span
+          aria-hidden
+          className={cn(
+            'pointer-events-none grid size-full place-items-center border transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent',
+            size === 'lg' ? 'rounded-md' : 'rounded-[5px]',
+            on ? 'border-accent bg-accent text-accent-fg' : 'border-border-strong bg-surface text-muted',
+            disabled && 'opacity-50',
+          )}
+        >
+          {saving !== undefined ? (
+            <Loader2 className={cn('animate-spin', size === 'lg' ? 'size-4' : 'size-3')} strokeWidth={3} />
+          ) : on ? (
+            <Check className={size === 'lg' ? 'size-5' : 'size-3.5'} strokeWidth={3} />
+          ) : null}
+        </span>
       </span>
       {label && (
         <label htmlFor={cid} className="cursor-pointer select-none text-sm">
@@ -267,12 +375,15 @@ export function Switch({
   description,
 }: {
   checked: boolean;
-  onChange: (v: boolean) => void;
+  /** Return a promise to show a spinner (and block more taps) until it settles. */
+  onChange: (v: boolean) => void | Promise<unknown>;
   label?: ReactNode;
   description?: ReactNode;
   disabled?: boolean;
 }) {
   const id = useId();
+  const [saving, run] = usePending<boolean>();
+  const on = saving !== undefined ? saving : checked;
   return (
     <div className="flex items-start justify-between gap-4">
       {label && (
@@ -281,17 +392,29 @@ export function Switch({
           {description && <span className="block text-[12.5px] text-muted">{description}</span>}
         </label>
       )}
+      {/* Invisible input over a drawn track, like Checkbox, so the track fills its box on every browser. */}
       <span className="relative inline-flex h-6 w-10 shrink-0">
         <input
           id={id}
           type="checkbox"
           role="switch"
-          checked={checked}
-          disabled={disabled}
-          onChange={(e) => onChange(e.target.checked)}
-          className="peer absolute inset-0 m-0 cursor-pointer appearance-none rounded-full bg-border-strong transition-colors checked:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+          checked={on}
+          disabled={disabled || saving !== undefined}
+          aria-busy={saving !== undefined || undefined}
+          onChange={(e) => run(e.target.checked, onChange(e.target.checked))}
+          className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
         />
-        <span aria-hidden className="pointer-events-none absolute left-0.5 top-0.5 size-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
+        <span
+          aria-hidden
+          className={cn(
+            'pointer-events-none size-full rounded-full transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent',
+            on ? 'bg-accent' : 'bg-border-strong',
+            disabled && 'opacity-50',
+          )}
+        />
+        <span aria-hidden className={cn('pointer-events-none absolute left-0.5 top-0.5 grid size-5 place-items-center rounded-full bg-white shadow-sm transition-transform', on && 'translate-x-4')}>
+          {saving !== undefined && <Loader2 className="size-3.5 animate-spin text-neutral-500" strokeWidth={3} />}
+        </span>
       </span>
     </div>
   );

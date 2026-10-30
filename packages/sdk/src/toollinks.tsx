@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ExternalLink, MessagesSquare } from 'lucide-react';
-import { Button, Favicon, Input, Select, cn, hostOf, OptionalTag, safeHref } from '@teamhub/ui';
+import { Form, Button, Favicon, Input, Select, cn, hostOf, OptionalTag, safeHref } from '@teamhub/ui';
 import { useSlotLinks, useToolLink, type LinkRow } from './hooks';
 import { TOOL_SLOT_LABELS } from './slots';
 import { TeamScopePicker } from './teams';
@@ -71,7 +71,7 @@ export function LinkEditor({
   });
   const [busy, setBusy] = useState(false);
   return (
-    <form
+    <Form
       className="space-y-3"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -132,7 +132,7 @@ export function LinkEditor({
           Save link
         </Button>
       </div>
-    </form>
+    </Form>
   );
 }
 
