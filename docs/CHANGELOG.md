@@ -12,6 +12,8 @@ Releases with a **Security** section fix a vulnerability. Update as soon as you 
 How to update your dashboard: [docs/updating.md](updating.md).
 
 ## [Unreleased]
+
+## [1.1.7] - 2026-10-30
 ### Changed
 
 - **Everything you tap shows that it's working.** Buttons, checkboxes, switches, drop-downs and forms that save
