@@ -29,18 +29,12 @@ const padding: Record<Size, string> = { sm: 'px-2.5', md: 'px-3.5', lg: 'px-5' }
  * should show meanwhile) until `result` settles; plain (non-promise) results are ignored. Errors still reach the caller.
  */
 export function usePending<T = true>(): [T | undefined, (value: T, result: unknown) => void] {
+  // No unmounted check: React ignores a state update after unmount.
   const [pending, setPending] = useState<T | undefined>(undefined);
-  const alive = useRef(true);
-  useEffect(() => {
-    alive.current = true;
-    return () => {
-      alive.current = false;
-    };
-  }, []);
   const run = (value: T, result: unknown) => {
     if (!result || typeof (result as PromiseLike<unknown>).then !== 'function') return;
     setPending(() => value);
-    const done = () => alive.current && setPending(undefined);
+    const done = () => setPending(undefined);
     (result as PromiseLike<unknown>).then(done, (e: unknown) => {
       done();
       throw e;
@@ -173,13 +167,14 @@ export const Select = forwardRef<
   HTMLSelectElement,
   Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> & { onChange?: (e: ChangeEvent<HTMLSelectElement>) => unknown }
 >(function Select({ className, children, onChange, disabled, value, ...rest }, ref) {
-  // An async onChange shows the new choice with a spinner in place of the arrow until it's saved.
+  // An async onChange shows the new choice with a spinner in place of the arrow until it's saved (styles.css swaps
+  // the arrow while aria-busy is set).
   const [saving, run] = usePending<string>();
   return (
     <select
       ref={ref}
       className={cn(field, w(className), 'h-9 pr-8 appearance-none bg-no-repeat', className)}
-      style={{ backgroundImage: saving !== undefined ? SPINNER : CHEVRON, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.6rem center', backgroundSize: '14px' }}
+      style={{ backgroundImage: CHEVRON, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.6rem center', backgroundSize: '14px' }}
       disabled={disabled || saving !== undefined}
       aria-busy={saving !== undefined || undefined}
       value={saving ?? value}
@@ -192,8 +187,6 @@ export const Select = forwardRef<
 });
 // Lucide 'chevron-down' (24×24) as a background so the native <select> keeps its accessibility and mobile pickers.
 const CHEVRON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e98' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`;
-// Lucide 'loader-circle', spun by SVG animation (a background image can't use CSS animations).
-const SPINNER = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e98' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-6.219-8.56'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='0.8s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E")`;
 
 export function Label({ children, htmlFor, className }: { children: ReactNode; htmlFor?: string; className?: string }) {
   return (

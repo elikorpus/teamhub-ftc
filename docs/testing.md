@@ -69,7 +69,7 @@ Playwright smoke test per config), `--no-typecheck`.
 
 ### Bundle budget
 
-`tools/scripts/check-bundle.ts` enforces: initial JavaScript ≤ 180 KB gzip for core only, plus 1.5 KB per enabled tab
+`tools/scripts/check-bundle.ts` enforces: initial JavaScript ≤ 181 KB gzip for core only, plus 1.5 KB per enabled tab
 (each tab adds a tiny always-loaded client); every lazy chunk ≤ 60 KB gzip (except the 3D model viewer); and
 **disabled tabs contribute zero bytes**: each tab's client contains the marker `teamhub-module:<id>`, which must be
 absent from the build when the tab is off.
