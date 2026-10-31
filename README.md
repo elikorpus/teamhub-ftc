@@ -1,7 +1,7 @@
 # TeamHub FTC usage history
 
 Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itself only keeps views and downloads for
-14 days). Last updated 2026-10-30. Raw numbers: `data/daily.json`.
+14 days). Last updated 2026-10-31. Raw numbers: `data/daily.json`.
 
 ## Totals
 
@@ -10,8 +10,8 @@ Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itsel
 | Stars | 1 |
 | Forks (team copies on GitHub) | 1 |
 | Teams signed up | see [the team list](https://github.com/elikorpus/teamhub-ftc/blob/main/docs/TEAMS.md) |
-| Downloads (git clones) since 2026-09-20 | 1392 |
-| Page views since 2026-09-20 | 217 |
+| Downloads (git clones) since 2026-09-20 | 1445 |
+| Page views since 2026-09-20 | 241 |
 
 Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily visitors and cloners are unique per day, so they can't be added up into an all-time unique count.
 
@@ -19,14 +19,15 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 
 | Month | Page views | Downloads | Stars (end) | Forks (end) |
 |---|---|---|---|---|
-| 2026-10 | 217 | 1392 | 1 | 1 |
+| 2026-10 | 241 | 1445 | 1 | 1 |
 | 2026-09 | 0 | 0 |   |   |
 
 ## Last 30 days
 
 | Day | Page views | Visitors | Downloads | Downloaders | Stars | Forks |
 |---|---|---|---|---|---|---|
-| 2026-10-30 |   |   |   |   | 1 | 1 |
+| 2026-10-31 |   |   |   |   | 1 | 1 |
+| 2026-10-30 | 24 | 4 | 53 | 13 | 1 | 1 |
 | 2026-10-29 | 0 | 0 | 12 | 7 | 1 | 1 |
 | 2026-10-28 | 0 | 0 | 1 | 1 | 1 | 1 |
 | 2026-10-27 | 0 | 0 | 10 | 8 | 1 | 1 |
@@ -55,11 +56,14 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 | 2026-10-04 | 19 | 1 | 29 | 1 | 0 | 0 |
 | 2026-10-03 | 18 | 1 | 20 | 1 | 0 | 0 |
 | 2026-10-02 | 54 | 1 | 110 | 2 |   |   |
-| 2026-10-01 | 3 | 1 | 0 | 0 |   |   |
 
 ## Where visitors came from (last 14 days)
 
-None yet.
+| Site | Views | Visitors |
+|---|---|---|
+| l.instagram.com | 3 | 2 |
+| github.com | 2 | 1 |
+| instagram.com | 1 | 1 |
 
 ## Forks (1)
 
