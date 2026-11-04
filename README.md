@@ -1,7 +1,7 @@
 # TeamHub FTC usage history
 
 Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itself only keeps views and downloads for
-14 days). Last updated 2026-11-03. Raw numbers: `data/daily.json`.
+14 days). Last updated 2026-11-04. Raw numbers: `data/daily.json`.
 
 ## Totals
 
@@ -10,7 +10,7 @@ Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itsel
 | Stars | 1 |
 | Forks (team copies on GitHub) | 1 |
 | Teams signed up | see [the team list](https://github.com/elikorpus/teamhub-ftc/blob/main/docs/TEAMS.md) |
-| Downloads (git clones) since 2026-09-20 | 1506 |
+| Downloads (git clones) since 2026-09-20 | 1507 |
 | Page views since 2026-09-20 | 263 |
 
 Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily visitors and cloners are unique per day, so they can't be added up into an all-time unique count.
@@ -19,7 +19,7 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 
 | Month | Page views | Downloads | Stars (end) | Forks (end) |
 |---|---|---|---|---|
-| 2026-11 | 0 | 56 | 1 | 1 |
+| 2026-11 | 0 | 57 | 1 | 1 |
 | 2026-10 | 263 | 1450 | 1 | 1 |
 | 2026-09 | 0 | 0 |   |   |
 
@@ -27,7 +27,8 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 
 | Day | Page views | Visitors | Downloads | Downloaders | Stars | Forks |
 |---|---|---|---|---|---|---|
-| 2026-11-03 |   |   |   |   | 1 | 1 |
+| 2026-11-04 |   |   |   |   | 1 | 1 |
+| 2026-11-03 | 0 | 0 | 1 | 1 | 1 | 1 |
 | 2026-11-02 | 0 | 0 | 15 | 9 | 1 | 1 |
 | 2026-11-01 | 0 | 0 | 41 | 16 | 1 | 1 |
 | 2026-10-31 | 22 | 7 | 5 | 4 | 1 | 1 |
@@ -56,7 +57,6 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 | 2026-10-08 | 2 | 1 | 51 | 7 | 1 | 1 |
 | 2026-10-07 | 0 | 0 | 65 | 36 | 1 | 1 |
 | 2026-10-06 | 41 | 2 | 262 | 62 | 1 | 1 |
-| 2026-10-05 | 67 | 3 | 314 | 87 | 0 | 0 |
 
 ## Where visitors came from (last 14 days)
 
