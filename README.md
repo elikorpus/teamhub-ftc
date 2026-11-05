@@ -1,7 +1,7 @@
 # TeamHub FTC usage history
 
 Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itself only keeps views and downloads for
-14 days). Last updated 2026-11-04. Raw numbers: `data/daily.json`.
+14 days). Last updated 2026-11-05. Raw numbers: `data/daily.json`.
 
 ## Totals
 
@@ -10,8 +10,8 @@ Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itsel
 | Stars | 1 |
 | Forks (team copies on GitHub) | 1 |
 | Teams signed up | see [the team list](https://github.com/elikorpus/teamhub-ftc/blob/main/docs/TEAMS.md) |
-| Downloads (git clones) since 2026-09-20 | 1507 |
-| Page views since 2026-09-20 | 263 |
+| Downloads (git clones) since 2026-09-20 | 1509 |
+| Page views since 2026-09-20 | 265 |
 
 Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily visitors and cloners are unique per day, so they can't be added up into an all-time unique count.
 
@@ -19,7 +19,7 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 
 | Month | Page views | Downloads | Stars (end) | Forks (end) |
 |---|---|---|---|---|
-| 2026-11 | 0 | 57 | 1 | 1 |
+| 2026-11 | 2 | 59 | 1 | 1 |
 | 2026-10 | 263 | 1450 | 1 | 1 |
 | 2026-09 | 0 | 0 |   |   |
 
@@ -27,7 +27,8 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 
 | Day | Page views | Visitors | Downloads | Downloaders | Stars | Forks |
 |---|---|---|---|---|---|---|
-| 2026-11-04 |   |   |   |   | 1 | 1 |
+| 2026-11-05 |   |   |   |   | 1 | 1 |
+| 2026-11-04 | 2 | 1 | 2 | 2 | 1 | 1 |
 | 2026-11-03 | 0 | 0 | 1 | 1 | 1 | 1 |
 | 2026-11-02 | 0 | 0 | 15 | 9 | 1 | 1 |
 | 2026-11-01 | 0 | 0 | 41 | 16 | 1 | 1 |
@@ -56,14 +57,13 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 | 2026-10-09 | 4 | 1 | 61 | 13 | 1 | 1 |
 | 2026-10-08 | 2 | 1 | 51 | 7 | 1 | 1 |
 | 2026-10-07 | 0 | 0 | 65 | 36 | 1 | 1 |
-| 2026-10-06 | 41 | 2 | 262 | 62 | 1 | 1 |
 
 ## Where visitors came from (last 14 days)
 
 | Site | Views | Visitors |
 |---|---|---|
 | l.instagram.com | 4 | 3 |
-| github.com | 3 | 2 |
+| github.com | 4 | 2 |
 | instagram.com | 1 | 1 |
 
 ## Forks (1)
