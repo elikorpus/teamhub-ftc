@@ -1,13 +1,8 @@
 {
-  "date": "2026-11-14",
+  "date": "2026-11-15",
   "referrers": [
     {
       "referrer": "github.com",
-      "count": 2,
-      "uniques": 2
-    },
-    {
-      "referrer": "l.instagram.com",
       "count": 1,
       "uniques": 1
     }
