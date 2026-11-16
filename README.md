@@ -1,7 +1,7 @@
 # TeamHub FTC usage history
 
 Saved daily from GitHub by `.github/workflows/traffic-history.yml` (GitHub itself only keeps views and downloads for
-14 days). Last updated 2026-11-15. Raw numbers: `data/daily.json`.
+14 days). Last updated 2026-11-16. Raw numbers: `data/daily.json`.
 
 ## Totals
 
@@ -27,6 +27,7 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 
 | Day | Page views | Visitors | Downloads | Downloaders | Stars | Forks |
 |---|---|---|---|---|---|---|
+| 2026-11-16 |   |   |   |   | 1 | 1 |
 | 2026-11-15 |   |   |   |   | 1 | 1 |
 | 2026-11-14 | 0 | 0 | 52 | 20 | 1 | 1 |
 | 2026-11-13 | 0 | 0 | 6 | 6 | 1 | 1 |
@@ -56,7 +57,6 @@ Downloads count `git clone` only. "Download ZIP" isn't counted by GitHub. Daily 
 | 2026-10-20 | 0 | 0 | 3 | 3 | 1 | 1 |
 | 2026-10-19 | 0 | 0 | 4 | 4 | 1 | 1 |
 | 2026-10-18 | 0 | 0 | 1 | 1 | 1 | 1 |
-| 2026-10-17 | 0 | 0 | 14 | 10 | 1 | 1 |
 
 ## Where visitors came from (last 14 days)
 
